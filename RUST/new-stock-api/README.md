@@ -84,3 +84,9 @@ Install dotenv helper (optional):
 ```
 cargo add dotenvy
 ```
+
+### 9. Rename .sample.env to .env
+
+Rename the .sample.env to .env
+
+Set environment variable, ALPHAVANTAGE_API_KEY=<API_KEY>
