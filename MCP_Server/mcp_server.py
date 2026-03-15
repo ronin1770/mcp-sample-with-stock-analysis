@@ -4,13 +4,12 @@ from typing import Any
 
 import httpx
 from dotenv import load_dotenv
-from mcp.server.fastmcp import FastMCP
 from fastapi.middleware.cors import CORSMiddleware
+from mcp.server.fastmcp import FastMCP
 
 load_dotenv(Path(__file__).with_name(".env"))
 
 mcp = FastMCP("stock-tools")
-
 RUST_API_BASE = os.getenv("RUST_API_BASE", "http://127.0.0.1:8080")
 
 
@@ -32,7 +31,11 @@ app = mcp.streamable_http_app()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://136.114.37.41:6274",
+        "http://localhost:6274",
+        "http://127.0.0.1:6274",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
