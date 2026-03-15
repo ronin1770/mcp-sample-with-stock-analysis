@@ -1,4 +1,6 @@
 import os
+import re
+from argparse import ArgumentParser
 from pathlib import Path
 from typing import Any
 
@@ -29,9 +31,12 @@ mcp = FastMCP(
             f"{PUBLIC_IP}:*",
         ],
         allowed_origins=[
-            "http://127.0.0.1:6274",
-            "http://localhost:6274",
-            f"http://{PUBLIC_IP}:6274",
+            "http://127.0.0.1:*",
+            "http://localhost:*",
+            f"http://{PUBLIC_IP}:*",
+            "https://127.0.0.1:*",
+            "https://localhost:*",
+            f"https://{PUBLIC_IP}:*",
         ],
     ),
 )
@@ -61,11 +66,7 @@ starlette_app = Starlette(
 # Browser-based MCP clients need CORS + exposed Mcp-Session-Id header
 app = CORSMiddleware(
     starlette_app,
-    allow_origins=[
-        "http://127.0.0.1:6274",
-        "http://localhost:6274",
-        f"http://{PUBLIC_IP}:6274",
-    ],
+    allow_origin_regex=rf"^https?://(127\.0\.0\.1|localhost|{re.escape(PUBLIC_IP)})(:\d+)?$",
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=[
         "Content-Type",
@@ -76,3 +77,29 @@ app = CORSMiddleware(
     expose_headers=["Mcp-Session-Id", "mcp-session-id"],
     allow_credentials=False,
 )
+
+
+def main() -> None:
+    """Run the server for local development and MCP Inspector."""
+    parser = ArgumentParser(description="Run the stock MCP server")
+    parser.add_argument(
+        "--transport",
+        choices=["streamable-http", "stdio"],
+        default=os.getenv("MCP_TRANSPORT", "streamable-http"),
+        help="Use streamable-http for browser Inspector URL mode or stdio for command mode",
+    )
+    parser.add_argument("--host", default=os.getenv("MCP_HOST", "0.0.0.0"))
+    parser.add_argument("--port", type=int, default=int(os.getenv("MCP_PORT", "8000")))
+    args = parser.parse_args()
+
+    if args.transport == "stdio":
+        mcp.run(transport="stdio")
+        return
+
+    import uvicorn
+
+    uvicorn.run(app, host=args.host, port=args.port)
+
+
+if __name__ == "__main__":
+    main()
