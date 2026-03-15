@@ -6,9 +6,7 @@ from typing import Any
 
 import httpx
 from dotenv import load_dotenv
-from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
-from starlette.routing import Mount
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
@@ -56,12 +54,8 @@ async def get_stock_quotes(symbols: list[str]) -> dict[str, Any]:
         return response.json()
 
 
-# Mount MCP under /mcp
-starlette_app = Starlette(
-    routes=[
-        Mount("/", app=mcp.streamable_http_app()),
-    ]
-)
+# Build MCP ASGI app (includes /mcp route and required lifespan handlers)
+starlette_app = mcp.streamable_http_app()
 
 # Browser-based MCP clients need CORS + exposed Mcp-Session-Id header
 app = CORSMiddleware(
