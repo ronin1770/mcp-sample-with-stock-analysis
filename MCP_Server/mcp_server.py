@@ -5,10 +5,27 @@ from typing import Any
 import httpx
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 load_dotenv(Path(__file__).with_name(".env"))
 
-mcp = FastMCP("stock-tools")
+mcp = FastMCP(
+    "stock-tools",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=[
+            "127.0.0.1:*",
+            "localhost:*",
+            "136.114.37.41:*",
+        ],
+        allowed_origins=[
+            "http://127.0.0.1:*",
+            "http://localhost:*",
+            "http://136.114.37.41:*",
+        ],
+    ),
+)
+
 RUST_API_BASE = os.getenv("RUST_API_BASE", "http://127.0.0.1:8080")
 
 
