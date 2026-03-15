@@ -1,4 +1,4 @@
-# This is the read me file for setting up REST API 
+# Setting up REST API using RUST 
 
 REST API component is developed using the *RUST*. This REST API communicates with 3rd party to retrieve Stock market quotes for the given symbols. This API is deployed on a **GCP VM running Ubuntu 24.04**. The following instructions are developed keeping this fact in mind.
 
