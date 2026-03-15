@@ -26,5 +26,4 @@ async def get_stock_quotes(symbols: list[str]) -> dict[str, Any]:
         return response.json()
 
 
-if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+app = mcp.streamable_http_app()
