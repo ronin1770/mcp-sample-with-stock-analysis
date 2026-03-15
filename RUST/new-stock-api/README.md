@@ -90,3 +90,40 @@ cargo add dotenvy
 Rename the .sample.env to .env
 
 Set environment variable, ALPHAVANTAGE_API_KEY=<API_KEY>
+
+
+### 10. Run the code 
+
+You can run the code using the following:
+
+```
+cargo run
+```
+
+
+### 11. Test API locally
+
+Run the following command
+
+```
+curl "http://127.0.0.1:8080/health"
+```
+
+Output:
+
+```
+{"status":"ok"}
+```
+
+Getting the quotations for MSFT
+
+
+```
+curl "http://127.0.0.1:8080/quotes?symbols=MSFT"
+```
+
+Output:
+
+```
+{"requested_symbols":["MSFT"],"quotes":[{"symbol":"MSFT","price":395.55,"previous_close":401.86,"change":-6.31,"change_percent":"-1.5702%","latest_trading_day":"2026-03-13"}]}
+```
