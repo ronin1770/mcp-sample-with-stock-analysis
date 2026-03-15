@@ -1,11 +1,12 @@
 import os
+from pathlib import Path
 from typing import Any
 
 import httpx
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
-load_dotenv()
+load_dotenv(Path(__file__).with_name(".env"))
 
 mcp = FastMCP("stock-tools")
 RUST_API_BASE = os.getenv("RUST_API_BASE", "http://127.0.0.1:8080")
@@ -26,4 +27,4 @@ async def get_stock_quotes(symbols: list[str]) -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="streamable-http")

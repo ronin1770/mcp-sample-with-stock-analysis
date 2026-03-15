@@ -70,3 +70,10 @@ python mcp_server.py
 
 - Exit the Screen by simultaneously pressing: CTRL + A + D
 
+## Testing MCP Server using MCP Inspector
+
+MCP Inspector is a developer debugging and testing tool used with Model Context Protocol (MCP) servers. It allows you to inspect, test, and interact with tools exposed by an MCP server before integrating it with an AI agent or application.
+
+It allows you to inspect, test, and interact with tools exposed by an MCP server before integrating it with an AI agent or application. It acts like Postman/Swagger UI but for MCP servers.
+
+
