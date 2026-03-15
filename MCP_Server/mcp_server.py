@@ -5,26 +5,11 @@ from typing import Any
 import httpx
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
-from mcp.server.transport_security import TransportSecuritySettings
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv(Path(__file__).with_name(".env"))
 
-mcp = FastMCP(
-    "stock-tools",
-    transport_security=TransportSecuritySettings(
-        enable_dns_rebinding_protection=True,
-        allowed_hosts=[
-            "127.0.0.1:*",
-            "localhost:*",
-            "136.114.37.41:*",
-        ],
-        allowed_origins=[
-            "http://127.0.0.1:*",
-            "http://localhost:*",
-            "http://136.114.37.41:*",
-        ],
-    ),
-)
+mcp = FastMCP("stock-tools")
 
 RUST_API_BASE = os.getenv("RUST_API_BASE", "http://127.0.0.1:8080")
 
@@ -44,3 +29,11 @@ async def get_stock_quotes(symbols: list[str]) -> dict[str, Any]:
 
 
 app = mcp.streamable_http_app()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
