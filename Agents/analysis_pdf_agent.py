@@ -144,7 +144,7 @@ def generate_pdf(report_data: dict[str, Any], filename: Path) -> None:
 
 
 async def main() -> None:
-    symbols = ["MSFT", "AAPL", "NVDA"]
+    symbols = ["MSFT", "NVDA"]
 
     raw_data = await fetch_quotes_via_mcp(symbols)
     analyzed = enrich_analysis(raw_data)
