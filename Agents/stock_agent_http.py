@@ -44,7 +44,7 @@ async def fetch_stock_quotes(symbols: list[str]) -> dict[str, Any]:
 
 
 async def main() -> None:
-    symbols = ["MSFT", "AAPL", "NVDA"]
+    symbols = ["MSFT"]
     data = await fetch_stock_quotes(symbols)
     print(json.dumps(data, indent=2))
 
