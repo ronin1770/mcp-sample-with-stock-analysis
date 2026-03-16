@@ -9,7 +9,7 @@ from fastmcp.client.transports import StreamableHttpTransport
 
 load_dotenv()
 
-MCP_SERVER_URL = os.getenv("MCP_SERVER_URL", "http://127.0.0.1:8000/mcp")
+MCP_SERVER_URL = os.getenv("MCP_SERVER_URL", "http://136.114.37.41:8000/mcp")
 
 
 async def fetch_stock_quotes(symbols: list[str]) -> dict[str, Any]:
