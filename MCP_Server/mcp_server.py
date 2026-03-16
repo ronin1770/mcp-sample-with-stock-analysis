@@ -46,12 +46,46 @@ async def get_stock_quotes(symbols: list[str]) -> dict[str, Any]:
     joined = ",".join(symbols)
 
     async with httpx.AsyncClient(timeout=20.0) as client:
-        response = await client.get(
-            f"{RUST_API_BASE}/quotes",
-            params={"symbols": joined},
-        )
-        response.raise_for_status()
-        return response.json()
+        try:
+            response = await client.get(
+                f"{RUST_API_BASE}/quotes",
+                params={"symbols": joined},
+            )
+        except httpx.RequestError as exc:
+            raise RuntimeError(
+                f"Failed to reach Rust API at {RUST_API_BASE}/quotes: {exc}. "
+                "Ensure the Rust API process is running and RUST_API_BASE is correct."
+            ) from exc
+
+        if response.status_code >= 400:
+            detail = _extract_error_detail(response)
+            raise RuntimeError(
+                f"Rust API returned HTTP {response.status_code} for /quotes: {detail}"
+            )
+
+        try:
+            return response.json()
+        except ValueError as exc:
+            raise RuntimeError(
+                "Rust API returned a non-JSON response for /quotes."
+            ) from exc
+
+
+def _extract_error_detail(response: httpx.Response) -> str:
+    """Return a short error detail string from a Rust API response."""
+    try:
+        payload = response.json()
+    except ValueError:
+        text = response.text.strip()
+        return text if text else "empty response body"
+
+    if isinstance(payload, dict):
+        error = payload.get("error")
+        if isinstance(error, str) and error.strip():
+            return error.strip()
+        return str(payload)
+
+    return str(payload)
 
 
 # Build MCP ASGI app (includes /mcp route and required lifespan handlers)
