@@ -62,10 +62,16 @@ You will be presented with informative text and hit Enter to continue.
 source renv/bin/activate
 ```
 
-- Start the MCP server using the following command:
+- Start the MCP server in Streamable HTTP mode (for MCP Inspector URL mode):
 
 ```
-python mcp_server.py
+python mcp_server.py --transport streamable-http --host 0.0.0.0 --port 8000
+```
+
+The MCP endpoint is:
+
+```
+http://127.0.0.1:8000/mcp
 ```
 
 - Exit the Screen by simultaneously pressing: CTRL + A + D
@@ -76,4 +82,21 @@ MCP Inspector is a developer debugging and testing tool used with Model Context 
 
 It allows you to inspect, test, and interact with tools exposed by an MCP server before integrating it with an AI agent or application. It acts like Postman/Swagger UI but for MCP servers.
 
+You can use either Inspector connection mode:
+
+1. URL mode (recommended for this project)
+
+Use:
+
+```
+http://127.0.0.1:8000/mcp
+```
+
+2. Command mode (stdio)
+
+Run:
+
+```
+python mcp_server.py --transport stdio
+```
 
